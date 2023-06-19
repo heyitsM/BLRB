@@ -6,7 +6,7 @@ BLRB will serve as a place for artists to display their portfolio, link personal
 ## About
 This repository, as it exists, is Team 7's final product in Spring 2023 Object Oriented Software Engineeering (601.421) at Johns Hopkins University. This team consisted of [Aya Habbas](https://github.com/ahabbs20), [Emily Berger](https://github.com/heyitsM), [Erica Lopez-Haz](https://github.com/elopezhaz), [Miaya South](https://github.com/msouth-code) and [Udochukwu Nwosu](https://github.com/unwosu6).
 
-This is a copy of the private repository that was used for the class. If you would like access to the repository that was worked on during the class, please contact me.
+This is a copy of the private repository that was used for the class. If you would like access to [the repository](https://github.com/cs421sp23-homework/sp23-oose-project-team-07) that was worked on during the class, please contact me.
 
 If you visit the website and it isn't working, it may be due to service pauses (database or hosting). If you find that happened, please contact me.
 
