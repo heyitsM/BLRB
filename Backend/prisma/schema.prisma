@@ -9,8 +9,10 @@ datasource db {
 
 model Tag {
   id       String    @id @default(uuid())
-  tag_info String    @unique
-  users    Profile[] @relation("ProfileToTag")
+  tagInfo String    @unique
+  profiles    Profile[] @relation("ProfileToTag")
+  posts       Post[] @relation("PostToTag")
+  portfolioItems PortfolioItem[] @relation("PortfolioItemToTag")
 }
 
 model User {
@@ -61,16 +63,16 @@ model PortfolioItem {
   description String?
   date_added  DateTime  @default(now())
   img         String?
-  tags        String[]
+  tags        Tag[]  @relation("PortfolioItemToTag")
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 }
 
 model ProfessionalArtistInfo {
-  commission_rules      String?
+  commissionRules      String?
   stripeAccountID       String
-  accepting_commissions Boolean @default(false)
+  acceptingCommissions Boolean @default(false)
   id                    String  @id @unique
-  pdf_link              String?
+  resume                String?
   user                  User    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
@@ -78,23 +80,22 @@ model RecruiterInfo {
   id            String  @id @unique
   company       String
   position      String
-  company_email String?
   user          User    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Commission {
   id              String            @id @default(uuid())
-  artist_id       String
-  commissioner_id String
+  artistId       String
+  commissionerId String
   title           String
   description     String
   notes           String?
   price           Float?
-  date_created    DateTime          @default(now())
-  date_updated    DateTime          @default(now()) @updatedAt
+  dateCreated    DateTime          @default(now())
+  dateUpdated    DateTime          @default(now()) @updatedAt
   status          Commission_Status @default(REQUESTED)
-  artist          User              @relation("ArtistToCommission", fields: [artist_id], references: [id], onDelete: Cascade)
-  commissioner    User              @relation("CommissionerToCommission", fields: [commissioner_id], references: [id], onDelete: Cascade)
+  artist          User              @relation("ArtistToCommission", fields: [artistId], references: [id], onDelete: Cascade)
+  commissioner    User              @relation("CommissionerToCommission", fields: [commissionerId], references: [id], onDelete: Cascade)
 }
 
 model Post {
@@ -102,19 +103,19 @@ model Post {
   userId       String
   img          String?
   body         String
-  date_created DateTime   @default(now())
-  num_likes    Int        @default(0)
-  tags         String[]
-  Comment      Comment[]
+  dateCreated DateTime   @default(now())
+  numLikes    Int        @default(0)
+  comment      Comment[]
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes        PostLike[]
+  tags         Tag[]      @relation("PostToTag")
 }
 
 model PostLike {
   id         String   @id @default(uuid())
   userId     String
   postId     String
-  date_liked DateTime @default(now())
+  dateLiked DateTime @default(now())
   post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -123,7 +124,7 @@ model Comment {
   id           String   @id @default(uuid())
   userId       String
   postId       String
-  date_created DateTime @default(now())
+  dateCreated DateTime @default(now())
   body         String
   Post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -131,17 +132,16 @@ model Comment {
 
 model Following {
   id                               String   @id @default(uuid())
-  follower_id                      String
-  blrbo_id                         String
-  date_followed                    DateTime @default(now())
-  User_Following_blrbo_idToUser    User     @relation("Following_blrbo_idToUser", fields: [blrbo_id], references: [id], onDelete: Cascade)
-  User_Following_follower_idToUser User     @relation("Following_follower_idToUser", fields: [follower_id], references: [id], onDelete: Cascade)
+  followerId                      String
+  blrboId                         String
+  dateFollowed                    DateTime @default(now())
+  User_Following_blrbo_idToUser    User     @relation("Following_blrbo_idToUser", fields: [blrboId], references: [id], onDelete: Cascade)
+  User_Following_follower_idToUser User     @relation("Following_follower_idToUser", fields: [followerId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
   RECRUITER
-  PROFESSIONALY
-  FOR_FUN
+  ARTIST
 }
 
 enum Commission_Status {
