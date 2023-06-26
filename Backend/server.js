@@ -7,5 +7,5 @@ const API_URL = config.url;
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Comm API at ${API_URL}`);
+  console.log(`BLRB API at ${API_URL}`);
 });

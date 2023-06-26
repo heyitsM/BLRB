@@ -8,50 +8,54 @@ datasource db {
 }
 
 model Tag {
-  id       String    @id @default(uuid())
-  tag_info String    @unique
-  users    Profile[] @relation("ProfileToTag")
+  id              String    @id @default(uuid())
+  tagInfo         String    @unique
+  profiles        Profile[] @relation("ProfileToTag")
+  posts           Post[] @relation("PostToTag")
+  portfolioItems  PortfolioItem[] @relation("PortfolioItemToTag")
 }
 
 model User {
   id                                    String                  @id @default(uuid())
   email                                 String                  @unique
-  first_name                            String
-  last_name                             String
+  firstName                             String
+  lastName                              String
   username                              String                  @unique
   password                              String
-  created_at                            DateTime                @default(now()) @updatedAt
-  role                                  Role?
-  Comment                               Comment[]
-  commissionAcceptor                    Commission[]            @relation("ArtistToCommission")
-  commissionRequester                   Commission[]            @relation("CommissionerToCommission")
-  Following_Following_blrbo_idToUser    Following[]             @relation("Following_blrbo_idToUser")
-  Following_Following_follower_idToUser Following[]             @relation("Following_follower_idToUser")
-  portfolio                             Portfolio?
-  Post                                  Post[]
-  PostLike                              PostLike[]
-  professionalArtistInfo                ProfessionalArtistInfo?
+  createdAt                             DateTime                @default(now())
+  updatedAt                             DateTime                @default(now()) @updatedAt
   profile                               Profile?
-  recruiterInfo                         RecruiterInfo?
+  isDeleted                             Boolean                 @default(false)
 }
 
 model Profile {
-  id               String   @id @default(uuid())
-  bio              String?
-  userId           String   @unique
-  display_name     String?
-  use_display_name Boolean  @default(false)
-  profile_pic      String?
-  update_date      DateTime @default(now())
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags             Tag[]    @relation("ProfileToTag")
+  id                                    String   @id @default(uuid())
+  bio                                   String?
+  userId                                String   @unique
+  displayName                           String?
+  profilePic                            String?
+  createdAt                             DateTime @default(now()) @updatedAt
+  updatedAt                             DateTime @default(now()) @updatedAt
+  user                                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags                                  Tag[]    @relation("ProfileToTag")
+  comment                               Comment[]
+  commissionAcceptor                    Commission[]            @relation("ArtistToCommission")
+  commissionRequester                   Commission[]            @relation("CommissionerToCommission")
+  following_Following_blrbo_idToUser    Following[]             @relation("Following_blrbo_idToProfile")
+  following_Following_follower_idToUser Following[]             @relation("Following_follower_idToProfile")
+  portfolio                             Portfolio?
+  post                                  Post[]
+  postLike                              PostLike[]
+  portfolioIsShown                      Boolean        @default(false)
+  commissionIsShown                     Boolean       @default(false)
+  commissionHandling                    CommissionHandling?
 }
 
 model Portfolio {
-  id     String          @id @default(uuid())
-  userId String          @unique
-  user   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items  PortfolioItem[]
+  id        String          @id @default(uuid())
+  userId    String          @unique
+  profile   Profile            @relation(fields: [id], references: [id], onDelete: Cascade)
+  items     PortfolioItem[]
 }
 
 model PortfolioItem {
@@ -59,89 +63,75 @@ model PortfolioItem {
   portfolioId String
   title       String
   description String?
-  date_added  DateTime  @default(now())
+  dateAdded   DateTime  @default(now())
   img         String?
-  tags        String[]
+  tags        Tag[]  @relation("PortfolioItemToTag")
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  isShown     Boolean @default(false)
 }
 
-model ProfessionalArtistInfo {
-  commission_rules      String?
+model CommissionHandling {
+  commissionRules       String?
   stripeAccountID       String
-  accepting_commissions Boolean @default(false)
+  acceptingCommissions  Boolean @default(false)
   id                    String  @id @unique
-  pdf_link              String?
-  user                  User    @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
-model RecruiterInfo {
-  id            String  @id @unique
-  company       String
-  position      String
-  company_email String?
-  user          User    @relation(fields: [id], references: [id], onDelete: Cascade)
+  profile               Profile    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Commission {
   id              String            @id @default(uuid())
-  artist_id       String
-  commissioner_id String
+  artistId        String
+  commissionerId  String
   title           String
   description     String
   notes           String?
   price           Float?
-  date_created    DateTime          @default(now())
-  date_updated    DateTime          @default(now()) @updatedAt
+  dateCreated     DateTime          @default(now())
+  dateUpdated     DateTime          @default(now()) @updatedAt
   status          Commission_Status @default(REQUESTED)
-  artist          User              @relation("ArtistToCommission", fields: [artist_id], references: [id], onDelete: Cascade)
-  commissioner    User              @relation("CommissionerToCommission", fields: [commissioner_id], references: [id], onDelete: Cascade)
+  artist          Profile              @relation("ArtistToCommission", fields: [artistId], references: [id], onDelete: Cascade)
+  commissioner    Profile              @relation("CommissionerToCommission", fields: [commissionerId], references: [id], onDelete: Cascade)
 }
 
 model Post {
-  id           String     @id @default(uuid())
-  userId       String
-  img          String?
-  body         String
-  date_created DateTime   @default(now())
-  num_likes    Int        @default(0)
-  tags         String[]
-  Comment      Comment[]
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  likes        PostLike[]
+  id              String     @id @default(uuid())
+  profileId       String
+  img             String?
+  body            String
+  dateCreated     DateTime   @default(now())
+  numLikes        Int        @default(0)
+  comment         Comment[]
+  profile         Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  likes           PostLike[]
+  tags            Tag[]      @relation("PostToTag")
 }
 
 model PostLike {
-  id         String   @id @default(uuid())
-  userId     String
-  postId     String
-  date_liked DateTime @default(now())
-  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(uuid())
+  profileId     String
+  postId        String
+  dateLiked     DateTime @default(now())
+  post          Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  profile       Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Comment {
   id           String   @id @default(uuid())
   userId       String
   postId       String
-  date_created DateTime @default(now())
+  dateCreated  DateTime @default(now())
   body         String
   Post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User         Profile     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Following {
   id                               String   @id @default(uuid())
-  follower_id                      String
-  blrbo_id                         String
-  date_followed                    DateTime @default(now())
-  User_Following_blrbo_idToUser    User     @relation("Following_blrbo_idToUser", fields: [blrbo_id], references: [id], onDelete: Cascade)
-  User_Following_follower_idToUser User     @relation("Following_follower_idToUser", fields: [follower_id], references: [id], onDelete: Cascade)
-}
-
-enum Role {
-  RECRUITER
-  PROFESSIONALY
-  FOR_FUN
+  followerId                       String
+  blrboId                          String
+  dateFollowed                     DateTime @default(now())
+  User_Following_blrbo_idToUser    Profile     @relation("Following_blrbo_idToProfile", fields: [blrboId], references: [id], onDelete: Cascade)
+  User_Following_follower_idToUser Profile     @relation("Following_follower_idToProfile", fields: [followerId], references: [id], onDelete: Cascade)
 }
 
 enum Commission_Status {

@@ -1,4 +1,7 @@
 // Constants.js
+import * as dotenv from "dotenv";
+dotenv.config();
+
 const production = {
   url: "https://comm-api.onrender.com",
   frontend_url:"https://comm-u8cy.onrender.com",
