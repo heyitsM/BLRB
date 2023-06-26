@@ -1,50 +1,26 @@
 {
-  "name": "sp23-oose-project-team-07-frontend",
+  "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "test": "jest",
-    "prettier": "prettier --write \"./**/*.{jsx}\" --config \".prettierrc\""
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@faker-js/faker": "^7.6.0",
-    "@mui/icons-material": "^5.11.11",
-    "@mui/material": "^5.11.11",
-    "@mui/x-data-grid": "^6.0.1",
-    "@react-pdf-viewer/core": "3.12.0",
-    "@stripe/react-stripe-js": "^2.0.0",
-    "@supabase/supabase-js": "^2.10.0",
-    "axios": "^1.3.3",
-    "mui-image": "^1.0.7",
-    "pdfjs-dist": "3.4.120",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.8.1",
-    "stripe": "^11.14.0",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-react": "^7.18.6",
-    "@faker-js/faker": "^7.6.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react": "^3.1.0",
-    "babel-jest": "^29.4.3",
-    "jest": "^29.4.3",
-    "jest-environment-jsdom": "^29.4.3",
-    "prettier": "^2.8.7",
-    "react-test-renderer": "^18.2.0",
-    "vite": "^4.1.0"
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^4.0.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "vite": "^4.3.9"
   }
 }
