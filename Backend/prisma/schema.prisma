@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_DEV_URL")
 }
 
 model Tag {
@@ -26,6 +26,7 @@ model User {
   updatedAt                             DateTime                @default(now()) @updatedAt
   profile                               Profile?
   isDeleted                             Boolean                 @default(false)
+  role                                  Role                    @default(ARTIST)
 }
 
 model Profile {
@@ -54,7 +55,7 @@ model Profile {
 model Portfolio {
   id        String          @id @default(uuid())
   userId    String          @unique
-  profile   Profile            @relation(fields: [id], references: [id], onDelete: Cascade)
+  profile   Profile         @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     PortfolioItem[]
 }
 
@@ -141,4 +142,9 @@ enum Commission_Status {
   ACCEPTED
   PAID
   COMPLETED
+}
+
+enum Role {
+  ADMIN
+  ARTIST
 }

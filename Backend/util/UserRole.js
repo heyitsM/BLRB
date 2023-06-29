@@ -1,5 +1,4 @@
-export const UserRole = {
-  Artist: "ARTIST",
-  Supporter: "SUPPORTER",
-  Recruiter: "RECRUITER",
-};
+export default Role = {
+    Admin: "ADMIN",
+    Artist: "ARTIST"
+}
